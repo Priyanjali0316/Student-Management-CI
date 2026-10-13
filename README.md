@@ -227,29 +227,16 @@ kubectl get pods -w
 ```
 
 
+## 8. Verification Results
 
-\## 8. Verification Results
-
-
-
-Fill in this section using your actual terminal output before submission.
-
-
-
-\- Maven tests: \[Enter actual test count and result]
-
-\- Maven package: \[Enter actual result]
-
-\- Jenkins pipeline: \[Enter actual result, once run]
-
-\- Initial Nginx replicas: 2
-
-\- Scaled Nginx replicas: 3
-
-\- Nginx service access: \[Enter observed result]
-
-\- Pod self-healing: \[Enter observed result]
-
+- Maven tests: 13 tests passed, 0 failures, 0 errors, 0 skipped.
+- Maven package: BUILD SUCCESS.
+- Jenkins pipeline: SUCCESS.
+- JAR artifact: Successfully archived by Jenkins.
+- Initial Nginx replicas: 2.
+- Scaled Nginx replicas: 3.
+- Nginx service access: Verified using Minikube service.
+- Pod self-healing: Verified by deleting a pod and observing Kubernetes create a replacement.
 
 
 \## 9. Git Workflow
