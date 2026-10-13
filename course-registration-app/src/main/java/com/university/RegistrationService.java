@@ -10,13 +10,16 @@ public class RegistrationService {
             return false;
         }
 
-        if (course.getCurrentEnrollment() > course.getCapacity()) {
+        if (course.getCurrentEnrollment() >= course.getCapacity()) {
             return false;
         }
 
         if (student.isRegistered(course.getCourseCode())) {
             return false;
         }
+        if (student.getRegisteredCourses().size() >= 5) {
+  	    return false;
+	}
 
         String prerequisite = course.getPrerequisite();
 

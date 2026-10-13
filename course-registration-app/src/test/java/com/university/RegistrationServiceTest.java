@@ -150,4 +150,78 @@ class RegistrationServiceTest {
         assertFalse(result);
         assertFalse(student.isRegistered("CS301"));
     }
+    @Test
+    void shouldRejectRegistrationWhenCourseIsFull() {
+        Student student = new Student("S201", "Priya");
+        Course course = new Course(
+                "CS501", "Networks", 3, 1, true, null);
+
+        RegistrationService service = new RegistrationService();
+
+        assertTrue(service.register(new Student("S202", "Other"), course));
+        int creditsBefore = student.getTotalCredits();
+        int enrollmentBefore = course.getCurrentEnrollment();
+
+        assertFalse(service.register(student, course));
+        assertFalse(student.isRegistered("CS501"));
+        assertEquals(creditsBefore, student.getTotalCredits());
+        assertEquals(enrollmentBefore, course.getCurrentEnrollment());
+    }
+
+    @Test
+    void shouldAllowRegistrationForLastAvailableSeat() {
+        Student firstStudent = new Student("S203", "Asha");
+        Student secondStudent = new Student("S204", "Ravi");
+        Course course = new Course(
+                "CS502", "Databases", 3, 2, true, null);
+
+        RegistrationService service = new RegistrationService();
+
+        assertTrue(service.register(firstStudent, course));
+        assertEquals(1, course.getCurrentEnrollment());
+
+        assertTrue(service.register(secondStudent, course));
+        assertEquals(2, course.getCurrentEnrollment());
+        assertTrue(secondStudent.isRegistered("CS502"));
+    }
+
+    @Test
+    void shouldAllowFifthCourse() {
+        Student student = new Student("S205", "Meera");
+
+        for (int i = 1; i <= 4; i++) {
+            student.addRegistration("OLD" + i, 3);
+        }
+
+        Course fifthCourse = new Course(
+                "CS505", "Networks", 3, 10, true, null);
+
+        RegistrationService service = new RegistrationService();
+
+        assertTrue(service.register(student, fifthCourse));
+        assertEquals(5, student.getRegisteredCourses().size());
+        assertEquals(15, student.getTotalCredits());
+        assertEquals(1, fifthCourse.getCurrentEnrollment());
+    }
+
+    @Test
+    void shouldRejectSixthCourseWithoutChangingState() {
+        Student student = new Student("S206", "Arun");
+
+        for (int i = 1; i <= 5; i++) {
+            student.addRegistration("OLD" + i, 3);
+        }
+
+        Course sixthCourse = new Course(
+                "CS506", "Security", 3, 10, true, null);
+
+        RegistrationService service = new RegistrationService();
+
+        assertFalse(service.register(student, sixthCourse));
+        assertEquals(5, student.getRegisteredCourses().size());
+        assertEquals(15, student.getTotalCredits());
+        assertFalse(student.isRegistered("CS506"));
+        assertEquals(0, sixthCourse.getCurrentEnrollment());
+    }
+
 }
